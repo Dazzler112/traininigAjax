@@ -1,0 +1,17 @@
+$.ajax({
+	type: 'post', 
+	url: '/',
+	async: true, 
+	headers: {
+		"Content-Type": "application/json",
+		"X-HTTP-Method-Override": "POST"    //Server에 Request Header 정보 이게 필요한 방식이 있었는대 나중에 친구에게 다시 물어봄
+	},
+	dataType: 'text',    //요청 Data에 대한 정보 활용할수 있는 방법은 엄청 다양함 JSP에서 해당 가져올 val를 사용하여 키,값 파라미터 보내는 형식으로도 사용가능
+	data: ,
+	success: function(result) {
+		console.log(result);    // 성공하면 해당값출력
+	},
+	error: function(request, status, error) {
+		console.log(error);    // 실패시 해당 출력
+	}
+});

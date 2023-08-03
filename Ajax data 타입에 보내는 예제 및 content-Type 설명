@@ -1,0 +1,16 @@
+let userName = $("#idex").val();             // 예를들어 name이라는 파람값에 userName을 보낸다고 가정하고
+$.ajax({
+	type: 'post', 
+	url: '/',       //url 있으면 해당 url로
+	Content-Type: "application/json",      // Content-Type이란? Message Body에 들어가는 타입을 HTTP Header에 명시해줄 수 있는데 이때 명시해줄 수 있도록 해주는 필드(예를 들면 예를 들어 api 요청 시 request에 실어 보내는 데이터(body)의 type정보를 표현)
+                                            그러면 application/json은?  application/json은 RestFul API를 사용하게 되며 request를 날릴 때 대부분 json을 많이 사용하게 됨
+                                            (내가 배웠던게 Rest API 였던건가? Rest API에 대한것도 공부할 필요가 생겼다)
+                                           
+	data : {name : userName} ,          // 이렇게 data를 키,값으로 담을수 있다 여러개 변수 넣어서 사용도 가능
+	success: function(data) {
+		console.log(data);              // 성공하면 해당값출력
+	},
+	error: function(request, status, error) {
+		console.log(error);          // 실패시 해당 출력
+	}
+});

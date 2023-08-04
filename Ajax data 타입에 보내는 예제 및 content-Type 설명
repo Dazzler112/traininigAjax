@@ -2,7 +2,8 @@ let userName = $("#idex").val();             // 예를들어 name이라는 파�
 $.ajax({
 	type: 'post', 
 	url: '/',       //url 있으면 해당 url로
-	Content-Type: "application/json",      // Content-Type이란? Message Body에 들어가는 타입을 HTTP Header에 명시해줄 수 있는데 이때 명시해줄 수 있도록 해주는 필드(예를 들면 예를 들어 api 요청 시 request에 실어 보내는 데이터(body)의 type정보를 표현)
+	Content-Type: "application/json",      // Content-Type이란? Message Body에 들어가는 타입을 HTTP Header에 명시해줄 수 있는데 이때 명시해줄 수 있도록 해주는 필드 (개발자도구의 네트워크탭에 확인 가능)
+						(예를 들면 예를 들어 api 요청 시 request에 실어 보내는 데이터(body)의 type정보를 표현)
                                             그러면 application/json은?  application/json은 RestFul API를 사용하게 되며 request를 날릴 때 대부분 json을 많이 사용하게 됨
                                             (내가 배웠던게 Rest API 였던건가? Rest API에 대한것도 공부할 필요가 생겼다)
                                            

@@ -1,0 +1,36 @@
+REST API 기초를 알기전에 알아야할 것은 URI, CRUD(create,read,update,delete), GET/POST/DELETE/UPDATE등을 알아야 한다
+CRUD, GET/POST/DELETE/UPDATE는 배우고 사용해서 알지만 URI? URL과 같은 개념일까?
+URI(Uniform Resource Identifier) 는 인터넷 리소스상 자원자체 URL(Uniform Resource Locator)은 위치(흔히 우리가 사용하는 https://www.xxx.com)
+URL은 URI에 포함되어있다 (다형성 개념 성립하는듯 URI는 URL이라 할수 없다) 그래서 URI URL의 범위는?
+URL은 프로토콜이 포함되어 있음 https://www.naver.com => URL (ftp , file 등도 여기 속할수 있다)
+URI는 그자체로 이름이 될수있다 (이름)naver.com => URI  다형성 개념 에 속하니 https://www.naver.com => URL,URI(URI도 여기 개념에 포함될수 있다) 즉 이름+위치를 나타낸 형태를 모두 포함한다
+
+•URI URL 구조
+ㅡㅡㅡㅡㅡㅡㅡURI/URLㅡㅡㅡㅡㅡㅡㅡ
+        ㅡㅡㅡㅡㅡㅡURIㅡㅡㅡㅡㅡㅡ
+                       ㅡㅡURNㅡㅡ
+https:// www.naver.com/ blog/view?
+https:// => Scheme: 리소스에 접근하는 데 사용할 프로토콜. 웹에서는 http 또는 https를 사용
+www.naver.com/ => Host: 접근할 대상(서버)의 호스트 명
+blog/view? => Path: 접근할 대상(서버)의 경로에 대한 상세 정보
+
+URN은 또무엇이지?
+URN은 리소스의 위치, 프로토콜, 호스트 등과는 상관없이 각 자원에 이름을 부여한 것 즉, URL은 어떤 특정 서버에 있는 웹 문서를 가리키는 반면,
+URN은 웹 문서의 물리적인 위치와 상관없이 웹 문서 자체를 나타냄. 
+
+알아두면 지식 뽑낼수 있음
+URL 의 역사
+
+1994년, URL 탄생!
+웹을 연결하여 온라인으로 통신하기 위해 사용되는 URL은 현재 인류의 삶에서 거의 매일 사용되고 있는데요.
+URL은 1994년, 월드 와이드 웹(World Wide Web)의 창시자로 알려진 Tim Berners-Lee에 의해 탄생했습니다.
+
+2002년, URL 단축 서비스 발명!
+그러나 현재 많은 기업이 사용하는 URL은 초기의 끝없이 긴 URL 과는 다릅니다.
+길고 번거로운 URL은 사람의 실수 또는 에러 메시지 발생 등 여러 문제를 야기하기도 하죠. 
+
+간단하고 사용하기 쉬운 URL로 바꾸려는 노력이 시도되어 왔고,
+2002년 Kevin Gilbertson은 최초의 URL 단축 서비스인 TinyURL을 만들었습니다.
+현재는 Bitly를 포함하여 여러 URL 단축 서비스가 생겨났죠.
+
+URL URI의 설명을 알았으니 다음부터는 REST API의 기초를 본격적으로 공부해 봐야겠다

@@ -1,7 +1,7 @@
 $.ajax({
 	type: 'post', 
 	url: '/',
-	async: true, 
+	async: true,  // 동기(false):비동기(true) 
 	headers: {
 		"Content-Type": "application/json",
 		"X-HTTP-Method-Override": "POST"    //Server에 Request Header 정보 이게 필요한 방식이 있었는대 나중에 친구에게 다시 물어봄

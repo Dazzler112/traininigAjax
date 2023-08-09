@@ -1,0 +1,22 @@
+$.ajax({
+	type: 'post', 
+	url: '/',
+	dataType: 'text', 
+
+  *dataType //The available data types are text, html, xml, json, jsonp, and script.
+  서버에서 반환되는 데이터 형식을 지정합니다. 생략했을 경우는, jQuery이 MIME 타입 등을 보면서 자동으로 결정합니다. 지정 가능한 값은 다음과 같은 것입니다.
+  "xml": XML 문서
+  "html": HTML을 텍스트 데이터로. 여기에 script 태그가 포함된 경우 처리가 실행
+  "script": JavaScript 코드를 텍스트 데이터로. cache 옵션 특히 지정이 없으면 캐시가 자동으로 비활성화된다. 원격 도메인에 대한 요청의 경우 POST는 GET으로 변환
+  "json": JSON 형식 데이터로 평가하고 JavaScript의 개체로 변환.
+  "jsonp": JSONP로 요청을 부르고 callback 매개 변수에 지정된 함수 회수 값을 JSON 데이터로 처리. (jQuery 1.2 추가)
+  "text": 일반 텍스트.
+
+예)
+contentType을 application/json으로 설정했으면 
+data의 값을 json구조로 보내줘야 하기때문에 JSON객체의 
+stringify()메서드를 활용해서 json구조로 변경해서 보내야한다
+
+
+▶ JSON.stringify() : JavaScript 객체를 JSON 문자열로 변환
+▶ JSON.parse() : JSON문자열을 JavaScript객체로 변환

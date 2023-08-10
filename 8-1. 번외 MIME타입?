@@ -1,0 +1,98 @@
+MIME : Multipurpose Internet Mail Extensions
+이미지나 동영상 파일등은 바이너리 데이터(이진데이터 0과1)에 속한다. 
+초기 이메일 시스템에서는 아스키 코드로만 주고 받을 수 있었기 때문에, 
+본문의 텍스트 뿐만 아니라 첨부파일도 전송하기위해 바이너리 데이터인 첨부파일을 아스키코드로 인코딩 하는 방법을 찾아야 했다. 
+Multipurpose Internet Mail Extension. 직역해보자면 다목적 인터넷 메일 확장.
+즉, 바이너리 데이터인 첨부파일들을 아스키코드로 인코딩하여 본문에 덧붙이겠다(Extension)는 뜻이다. 
+전송 시 인코딩된 바이너리 데이터(사진, 동영상 등)가 어떤 타입인지 명해주어야 수신 측에서 그 타입대로 해석한다. 
+현재는 이메일 뿐만 아니라 웹을 통해 HTTP 통신에서 전달되는 다양한 형태의 데이터를 표현하기 위해 사용되고 있다.
+브라우저는 리소스를 내려받았을 때, 해야할 기본동작을 MIME 타입을 기반으로 결정한다. 
+
+예전에는 텍스트파일을 주고 받는데 ASCII코드로 공통된 표준에 따르기면 하면 되었으나, 
+네트워크를 통해 ASCII가 아닌 Binary 파일을 보내는 경우가 생기게 되었다. 음악파일, 비디오파일, 워드파일 등등
+ASCII만으로 전송이 불가하기 때문에 기존시스템에서 문제없이 전달하기 위해 텍스트변환이 필요했다.
+TCP/IP 네트워크에서 이메일교환 시 표준으로 RFC822(기본 이메일메시지 형식 정의 )이메일 메시지 형식이 사용되는데
+이 형식은 ASCII코드를 사용하기 때문에 간단한 메시지를 전송할 경우에는 유용하지만, 
+다른 통신형태 (멀티미디어, 임의의파일 등..)까지 모두 지원하기에는 유연성이 부족하다. 
+따라서, 이러한 다른 통신형태의 다양한 메시지를 지원하기 위해서 MIME표준이 개발된 것이다. 
+
+*인코딩 Encoding
+바이너리 파일에서 텍스트파일로 변환
+*디코딩 Decoding
+텍스트파일을 바이너리 파일로 변환
+
+
+MIME 데이처 처리 과정 
+MIME으로 인코딩한 파일은 Content-type정보를 파일의 앞부분에 담는다.
+이 Content-type은 여러가지 타입이 있는데 특정 Content-type은 웹서버로부터 전달받아 웹브라우저에서 열어볼 수 있다.
+웹브라우저에서 서버에 html문서를 요청하면서 html문서에 있는 이미지파일의 경로를 불러올 수 오는데, 
+이때 이미지 경로의 파일이 웹브라우저에서 지원되는 MIME-type 이라면 열어볼 수 있는 것이다.
+
+- 텍스트가 아닌 정보 포함 가능: 그림, 음악, 비디오 등의 파일
+- 임의의 바이너리 파일 포함 가능: 실행파일, autoCAD파일, PDF 파일 등.. 
+- ASCII가 아닌 다른 문자셋을 사용하는 텍스트 메시지 포함 가능 
+
+주로 사용되는 .gjf , .jsp, .mov 등의 파일도 웹브라우저에서 열 수가 있는데, 브라우저에서 지원하지 않은 유형은 별도 지정해주어야 한다. 
+ 
+* Content-type? 
+MIME 실체가 인코딩하고 있는 데이터의 종류를 설명한다.
+http message body에 들어가는 데이터 타입과 서브타입을 나타내며, 각각 "/"으로 구분한다. 
+multipart 타입을 통해서 MIME은 트리구조의 메세지 형식을 정의할 수 있다. 
+
+MIME형식: [파일종류/파일포맷]
+ex) 
+text/plain : 텍스트 메세지 
+multipart/mixed  : 텍스트 + 첨부포함 메세지 
+multipart/alternative   : 텍스트 + html 와 같이 다른포맷을 함께 보낸 메세지.
+
+MIME의  타입
+1. 개별타입
+text
+특정 문자셋으로 구성된 텍스트정보 등 formatted text정보 전송에 사용
+ex) text/plain, text/html, text/css, text/javascript
+multipart
+모든종류의 이미지를 나타내며, 비디오는 포함하지 않는다 
+multipart/mixed , multipart/alternative , multipart/form-data, multipart/byteranges 
+audio
+모든종류의 오디오 파일전송 
+audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav
+video
+모든종류의 비디오 파일 전송 
+ video/webm, video/ogg
+application
+모든 바이너리 데이터 전송 
+application/octet-stream, application/pkcs12, application/vnd.mspowerpoint, 
+application/xhtml+xml, application/xml,  application/pdf
+ 
+2. 멀티파트 타입
+멀티파트타입은 일반적으로 다른 MIME 타입들을 지닌 개별적인 파트들로 나누어지는 문서의 카테고리다.
+즉, 이 타입은 합성된 문서를 표현한다. 
+
+3. 주요 MIME 타입
+application/octet-stream
+바이너리 타입을 위한 기본값
+text/plain
+텍스트파일에 대한 기본값
+text/css
+웹페이지 내에서 보통 인터프리터 되어야하는 모든 css파일
+text/html
+모든 html컨텐츠는 이타입과 함께 서브된다. 
+
+이미지 타입 
+- image/gif (무손실압축) 
+- image/jpeg
+- image/pn
+- image/svg+xml (백터이미지) 
+
+비디오 / 오디오 타입
+multipart/form-data
+multipart/byteranges
+
+일반적으로 특정 서브타입이 없는 경우 'text/plain'으로 사용하며,
+특정타입이 없는 바이너리 데이터의 경우 'application/octet-stream'을 사용한다.
+
+(나의 생각:
+기존에 프로젝트 할때 form 타입에 mmultipart/form-data 해서 이미지 저장하고 했었던거 같은대
+MIME타입 까지 사용할 필요는 없을거 같지만 앞으로 개발자를 하면서 아예 또 사용 안 할 방식도 아닌거 같아서
+알아두면 나쁘지 않고 필히 사용할 수 있을거 같다. 그리고 contentType 이나 dataType 설명 볼때 MIME를 봤고 
+나중에 어느곳에서는 사용하지 않을까 라는 생각도 해서 어떤 흐름으로 흘러가는지는 알아야 할거 같아서 학습해봤다.)

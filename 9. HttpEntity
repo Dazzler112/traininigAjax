@@ -1,0 +1,16 @@
+HttpEntity클래스는 HTTP요청또는 응답에 해당하는 HttpHeader와 HttpBody를 포함하는 클래스다.
+따라서 이 클래스는 다음과같은 생성자와 필드를 갖는다.
+
+예시)
+public class HttpEntity<T> {
+    public static final HttpEntity<?> EMPTY = new HttpEntity();
+    private final HttpHeaders headers;    // http header에는 (요청/응답)에 대한 요구사항이 적혀있고
+    private final T body;                // http body에는 그 내용이 적혀있다
+    ...
+}
+HttpEntity 클래스를 상속받아 구현한 클래스가 RequestEntity, ResponseEntity 클래스이다. 
+
+
+
+(HttpEntity는 학원에서 배울때도 짧게 배워본거 같다.
+다음은 공부해봤지만 다시한번 RequestEntity, ResponseEntity에 관한 공부를 해봐야겠다.)

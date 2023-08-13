@@ -1,0 +1,139 @@
+Public Class  ResponseEntity<T> 는 HttpEntity<T를 확장합니다>
+HttpStatusCode 상태 코드를 추가하는 HttpEntity의 확장. 뿐만 아니라 RestTemplate@Controller 방법에서도 사용됨. 
+이 클래스는 getForEntity() 및 exchange():RestTemplate@Controller 에 의해 반환된다. 
+
+이것은 Spring MVC에서 반환 값으로 사용될 수도 있다.Method:@Controller
+ @RequestMapping("/handle")
+ public ResponseEntity<String> handle() {
+   URI location = ...;
+   HttpHeaders responseHeaders = new HttpHeaders();
+   responseHeaders.setLocation(location);
+   responseHeaders.set("MyResponseHeader", "MyValue");
+   return new ResponseEntity<String>("Hello World", responseHeaders, HttpStatus.CREATED);
+ }
+ 
+또는 정적 메서드를 통해 액세스할 수 있는 빌더를 사용합니다.
+ @RequestMapping("/handle")
+ public ResponseEntity<String> handle() {
+   URI location = ...;
+   return ResponseEntity.created(location).header("MyResponseHeader", "MyValue").body("Hello World");
+ }
+
+//위는 Spring-framework 사이트 설명
+
+ResponseEntity 사용이유
+
+일반적으로 Controller에서 아래와 같이 객체를 Return 하는 경우 HTTP 응답을 제어할 수가 없습니다.
+
+예)
+@GetMapping("/")
+public User getUser() {
+    User user = userService.getUser();
+    return user;
+}
+
+하지만 REST API로 만든다면 클라이언트와 서버 간의 통신에 필요한 정보를 제공해야 한다.
+그럴 때 ResponseEntity를 사용한다면 적절한 상태 코드와 응답 헤더 및 응답 본문을 생성해서 클라이언트에 전달할 수 있음.
+
+사용 예시는 아래와 같다. 성공을 의미하는 OK(200 code)와 함께 user 객체를 Return 하는 코드.
+
+@GetMapping("/")
+public ResponseEntity<User> getUser() {
+	User user = userService.getUser();
+	return ResponseEntity.ok(user);
+}
+참고로 @ResponseBody를 붙이지 않아도 ObjMapper를 통해 Json으로 바꿀 수 있음.
+보통 커스터마이징 할 때 사용하며 아래와 같이 씁니다.
+
+new ObjectMapper().writeValueAsString(map)
+
+
+ResponseEntity를 잘 쓰는 방법
+Return은 생성자보다는 빌더 패턴 사용
+생성자 패턴
+return new ResponseEntity(body, headers, HttpStatus.valueOf(200));
+
+빌더 패턴
+return ResponseEntity.ok()
+	.headers(headers)
+	.body(body);
+ResponseEntity.ok()는 정적 팩토리 메서드입니다.
+
+그리고 뒷부분을 메소드 체이닝으로 연결한 빌더 패턴을 사용하는 것이 의미가 더 직관적이고 유지보수에 좋다.
+
+ResponseEntity의 Body 타입을 명시하라
+public ResponseEntity getUser() {
+위와 같이 메소드를 작성하면 ResponseEntity의 타입을 작성하지 않은 것이라 Object(모든 자바의 부모 클래스)를 Return으로 받는다.
+
+ 
+
+위의 코드는 아래의 코드와 기능적으로 의미가 같다.
+
+public ResponseEntity<Object> getUser() {
+ResponseEntity의 타입은 명시하지 않으면 Object 타입을 Return 해줌.
+다만 대부분의 상황에서는 유지보수를 위해 타입을 명시해 주는 것이 직관적이므로 좋음.
+
+타입을 여러 개 받고 싶다면 Return 타입은 Object 대신 와일드카드 사용
+보통 타입을 여러개 받고 싶은 경우 아래와 같이 Object나 와일드카드를 사용할 수 있음.
+이러한 방법은 API로 제공되는 라이브러리가 아니라 개발 구성원들끼리만 공유될 경우 개발 생산성을 높일 수 있기 때문에 좋은 선택이 될 수 있다.
+
+반환 타입이 명확하지 않아도 Return 된다
+public ResponseEntity<Object> getUsers() {
+    List<User> users = userService.getUsers();
+    return ResponseEntity.ok(users);
+}
+public ResponseEntity<?> getUsers() {
+    List<User> users = userService.getUsers();
+    return ResponseEntity.ok(users);
+}
+Return 할 때 객체의 타입이 명확하지 않을 때는 Object를 사용하는 것보다 와일드카드(?)를 사용하는 것이 좋다.
+
+정해지지 않은 타입을 반환한다는 점에서는 Object나 와일드카드나 같은 기능을 하지만 와일드카드를 사용하면 반환할 수 있는 객체의 타입이 명확하지 않아도 사용이 가능.
+
+예시로는 아래와 같음.
+@GetMapping("/users")
+public ResponseEntity<?> getUsers() {
+    List<?> users = userService.getUsers();
+    return ResponseEntity.ok(users);
+}
+
+
+  
+와일드카드, Object vs 사용자 객체
+와일드카드나 Object를 이용해서 API를 만든다면 해당 API를 사용하는 사용자는 불필요한 형변환 작업을 해줘야 하는 단점이 존재.
+아래는 (List<User>)로 불필요한 형변환을 하는 예제.
+
+public ResponseEntity<Object> getUsers() {
+    List<User> users = userService.getUsers();
+    return ResponseEntity.ok(users);
+}
+ResponseEntity<Objects> response = restTemplate.getForEntity("/users", Objects.class);
+List<User> users = (List<User>) response.getBody();
+
+  그래서 와일드카드가 아닌 타입 파라미터를 사용한다면 컴파일 타임에 자동 형변환이 되므로 개발자는 따로 형변환을 해줄 필요가 없다.
+
+@GetMapping("/")
+public ResponseEntity<T> getUser() {
+    T user = userService.getUser();
+    return ResponseEntity.ok(user);
+}
+ 
+ 
+하지만 API 설계 측면에서는 타입 파라미터를 이용하는 것보다 명시적으로 사용자 객체를 지정해 주는 것이 더 좋습니다.
+
+@GetMapping("/users")
+public ResponseEntity<User> getUser() {
+    User user = userService.getUsers();
+    return ResponseEntity.ok(user);
+}
+
+
+(나의생각 :
+ ResponseEntity의 대해 좀더 공부해봤다 Ajax와 잘 맞는 궁함이라고 생각해서 다시 공부해야 할 필요성이 느껴졌기 때문이다
+ 강사님이 프로젝트 할때 build()로 마무리 했는대 build를 왜 사용할까 란 생각만 해보고 찾아보지 않았지만 이게 24가지 디자인패턴중
+ build패턴이라는 것을 알았다(정처기 공부하다 알았음) ResponseEntity 사용시 build패턴을 많이 사용했는대 
+ build패턴이라는것을 다시한번더 공부해야할 필요성을 느낀거 같다 그리고 찾아보니까 팀원들과 프로젝트시 와일드카드 사용하면 타입정하지 않아도
+ 편하게 사용할수 있다고 했는대 JAVA공부중 와일드카드 물어봤을때도 해당타입을 사용하면 처음에는 이렇게사용하더라고 나중에는 타입 맞춰서 다시 바꿔줘야
+ 한다고 배운거 같은대 타입이 안정해졌을시만 사용하고 나중에는 다시 바꿔줘야 하는 번거로움도 발생할수 있어서 신중하게 사용해야할거 같다
+ (어차피 회사가면 이런타입은 사용 안할거 같다.. 오히려 사용하면 혼날거 같다는 생각이 든다) 그래서 다음에는 ResponseEntity에 배울게 더 있으면
+ 찾아보고 없으면 build패턴으로 넘어갈 생각이다.)

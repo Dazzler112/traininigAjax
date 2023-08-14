@@ -1,0 +1,98 @@
+ResponseEntity 는 상태(상태코드 및 데이터)를 전달하고 싶을때 주로 사용한다고 한다.
+주요구조로는 HttpEntity를 상속받기 때문에
+HttpStatus
+HttpHeaders
+HttpBody
+를 포함한다고 한다.
+
+http header에는 (요청/응답)에 대한 요구사항이 http body에는 그 내용이 적혀있고,
+Response header 에는 웹서버가 웹브라우저에 응답하는 메시지가 들어있고, Reponse body에 데이터 값이 들어가있다고 한다.
+
+status는 말그대로 100~500번까지의 응답상태코드들을 말한다
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+예시들
+
+• 팩토리 메소드를 이용한 가독성이 좋은 ResponseEntity 작성 예시
+
+대에충 아래 내용을 보면, 상태코드를 바탕으로 빌더 패턴을 구현해 놓았습니다.
+보기좋게 사용해봅시다!
+/**
+ * Create a builder with the given status.
+ * @param status the response status
+ * @return the created builder
+ * @since 4.1
+ */
+public static BodyBuilder status(int status) {
+   return new DefaultBuilder(status);
+}
+
+/**
+ * Create a builder with the status set to {@linkplain HttpStatus#OK OK}.
+ * @return the created builder
+ * @since 4.1
+ */
+public static BodyBuilder ok() {
+   return status(HttpStatus.OK);
+}
+
+/**
+ * A shortcut for creating a {@code ResponseEntity} with the given body
+ * and the status set to {@linkplain HttpStatus#OK OK}.
+ * @param body the body of the response entity (possibly empty)
+ * @return the created {@code ResponseEntity}
+ * @since 4.1
+ */
+public static <T> ResponseEntity<T> ok(@Nullable T body) {
+   return ok().body(body);
+}
+
+/**
+ * A shortcut for creating a {@code ResponseEntity} with the given body
+ * and the {@linkplain HttpStatus#OK OK} status, or an empty body and a
+ * {@linkplain HttpStatus#NOT_FOUND NOT FOUND} status in case of an
+ * {@linkplain Optional#empty()} parameter.
+ * @return the created {@code ResponseEntity}
+ * @since 5.1
+ */
+public static <T> ResponseEntity<T> of(Optional<T> body) {
+   Assert.notNull(body, "Body must not be null");
+   return body.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
+}
+
+/**
+ * Create a new builder with a {@linkplain HttpStatus#CREATED CREATED} status
+ * and a location header set to the given URI.
+ * @param location the location URI
+ * @return the created builder
+ * @since 4.1
+ */
+public static BodyBuilder created(URI location) {
+   return status(HttpStatus.CREATED).location(location);
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+• 상태코드만 반환해 줄 때
+@PostMapping("/post/like")
+public ResponseEntity<SetLikeDto.Response> updateLike(@RequestBody SetLikeDto.Request postLikeDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    Post post = postService.setPostLike(postLikeDto,userDetails.getUser());
+
+    SetLikeDto.Response response = modelMapper.map(post, SetLikeDto.Response.class);
+
+    return ResponseEntity.ok().build();
+    }
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+• Body까지 보내줄 때
+@PostMapping("/post/like")
+public ResponseEntity<SetLikeDto.Response> updateLike(@RequestBody SetLikeDto.Request postLikeDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    Post post = postService.setPostLike(postLikeDto,userDetails.getUser());
+
+    SetLikeDto.Response response = modelMapper.map(post, SetLikeDto.Response.class);
+
+    return ResponseEntity.ok(response);
+}
+
